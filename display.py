@@ -181,7 +181,7 @@ class FlowField:
             if nx < 0 or nx >= W or ny < 0 or ny >= H or random.random() < 0.0025:
                 nx = random.uniform(0, W); ny = random.uniform(0, H)
             self.px[i] = nx; self.py[i] = ny
-        floating_clock(screen, self.fb, self.fr, 50)
+        floating_clock(screen, self.fb, self.fr, 30)
 
 
 class MatrixRain:
@@ -460,7 +460,7 @@ class Aquarium:
             pygame.draw.polygon(screen, f["c"], [(x + tx, y), (x + int(tx * 1.7), y - s // 2), (x + int(tx * 1.7), y + s // 2)])
             eye = x - tx // 2
             pygame.draw.circle(screen, (255, 255, 255), (eye, y - 2), 2)
-        floating_clock(screen, self.fb, self.fr, 50)
+        floating_clock(screen, self.fb, self.fr, 30)
 
 
 class Plasma:
@@ -488,7 +488,7 @@ class Plasma:
         rgb[..., 2] = (128 + 127 * np.sin(v + 4)).astype(np.uint8)
         surf = pygame.image.frombuffer(rgb.tobytes(), (self.w, self.h), "RGB")
         screen.blit(pygame.transform.smoothscale(surf, (W, H)), (0, 0))
-        floating_clock(screen, self.fb, self.fr, 50)
+        floating_clock(screen, self.fb, self.fr, 30)
 
 
 class Fractal:
