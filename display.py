@@ -720,7 +720,7 @@ def main():
     fade = pygame.Surface((W, H)); fade.fill((0, 0, 0))
     transition = 0  # 0..1 fade
 
-    bl_idx = BL_LEVELS.index(25)    # start at 10%
+    bl_idx = BL_LEVELS.index(13)    # start at 5%
     set_brightness(BL_LEVELS[bl_idx])
     start_t = time.time()
     last_tap = 0.0
