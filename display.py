@@ -460,7 +460,7 @@ class Aquarium:
             pygame.draw.polygon(screen, f["c"], [(x + tx, y), (x + int(tx * 1.7), y - s // 2), (x + int(tx * 1.7), y + s // 2)])
             eye = x - tx // 2
             pygame.draw.circle(screen, (255, 255, 255), (eye, y - 2), 2)
-        floating_clock(screen, self.fb, self.fr, 30)
+        floating_clock(screen, self.fb, self.fr, 70)
 
 
 class Plasma:
