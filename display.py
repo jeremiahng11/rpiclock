@@ -697,7 +697,7 @@ class WeatherRadar:
             pygame.draw.circle(screen, c, (W - 12 - (n - 1 - i) * 16, H - 17), 4)
 
 
-SCENES = [FlowField, MatrixRain, Aquarium, Fractal, WordClock, FlipClock, WorldISS, WeatherRadar]
+SCENES = [FlowField, MatrixRain, Aquarium, WordClock, FlipClock, WorldISS]
 
 
 def main():
