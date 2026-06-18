@@ -46,7 +46,7 @@ SCENE_SECS = 75
 # auto-detect the display backlight (official 7" DSI = 10-0045); None if there is none
 _bl = sorted(glob.glob("/sys/class/backlight/*/brightness"))
 BL = _bl[0] if _bl else None
-BL_LEVELS = [25, 76, 102]                         # tap cycles 10% -> 30% -> 40% -> back
+BL_LEVELS = [13, 25, 76, 102]                     # 5% / 10% / 30% / 40% (default 10%; tap cycles)
 
 
 def set_brightness(v):
@@ -720,8 +720,8 @@ def main():
     fade = pygame.Surface((W, H)); fade.fill((0, 0, 0))
     transition = 0  # 0..1 fade
 
-    bl_idx = 0
-    set_brightness(BL_LEVELS[0])    # start at 10%
+    bl_idx = BL_LEVELS.index(25)    # start at 10%
+    set_brightness(BL_LEVELS[bl_idx])
     start_t = time.time()
     last_tap = 0.0
     pygame.event.clear()            # drop spurious startup touch/mouse events
@@ -735,7 +735,7 @@ def main():
                 if now_t - start_t > 1.5 and now_t - last_tap > 0.3:   # skip startup events; debounce taps
                     last_tap = now_t
                     bl_idx = (bl_idx + 1) % len(BL_LEVELS)
-                    set_brightness(BL_LEVELS[bl_idx])   # tap cycles 10% -> 30% -> 40% -> 10%
+                    set_brightness(BL_LEVELS[bl_idx])   # tap cycles 10% -> 30% -> 40% -> 5% -> back
 
         t = time.time() - t0
         try:
