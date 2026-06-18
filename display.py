@@ -697,7 +697,71 @@ class WeatherRadar:
             pygame.draw.circle(screen, c, (W - 12 - (n - 1 - i) * 16, H - 17), 4)
 
 
-SCENES = [FlowField, MatrixRain, Aquarium, WordClock, FlipClock, WorldISS]
+class PacClock:
+    name = "pacman"
+    clock = False
+    GHOSTS = [(255, 0, 0), (255, 184, 255), (0, 255, 255), (255, 184, 82)]  # Blinky/Pinky/Inky/Clyde
+
+    def __init__(self):
+        self.big = font(FB, 140)
+        self.sm = font(FR, 30)
+        self.lane = H - 72        # corridor y where pac + ghosts run
+        self.pr = 22              # pac-man radius
+        self.gap = 56             # pellet spacing
+        self.speed = 2.6
+        self.x = -40.0
+
+    def enter(self, screen):
+        self.x = -40.0
+
+    def _ghost(self, screen, cx, cy, r, col):
+        cx, cy = int(cx), int(cy)
+        pygame.draw.circle(screen, col, (cx, cy), r)                  # rounded head
+        pygame.draw.rect(screen, col, (cx - r, cy, 2 * r, r))        # body
+        fr = r // 3
+        for i in (-1, 0, 1):                                          # bumpy feet
+            pygame.draw.circle(screen, col, (cx + i * (r - fr), cy + r), fr)
+        for s in (-1, 1):                                             # eyes looking ahead (right)
+            ex = cx + s * (r // 2)
+            pygame.draw.circle(screen, (255, 255, 255), (ex, cy - r // 4), r // 3)
+            pygame.draw.circle(screen, (40, 40, 230), (ex + r // 5, cy - r // 4), r // 6)
+
+    def draw(self, screen, t):
+        screen.fill((0, 0, 0))
+        # maze corridor (classic blue walls)
+        pygame.draw.line(screen, (33, 33, 255), (0, self.lane - 34), (W, self.lane - 34), 3)
+        pygame.draw.line(screen, (33, 33, 255), (0, self.lane + 34), (W, self.lane + 34), 3)
+        # pellets ahead of pac-man (eaten as he passes)
+        px = 30
+        while px < W:
+            if px > self.x + self.pr:
+                pygame.draw.circle(screen, (255, 255, 170), (px, self.lane), 4)
+            px += self.gap
+        # advance pac-man, wrap around
+        self.x += self.speed
+        if self.x > W + 70:
+            self.x = -40.0
+        # ghosts trailing behind
+        for i, col in enumerate(self.GHOSTS):
+            gx = self.x - (i + 1) * 54 - 44
+            if -30 < gx < W + 30:
+                self._ghost(screen, gx, self.lane, 18, col)
+        # pac-man with chomping mouth (facing right)
+        cx, cy, r = self.x, self.lane, self.pr
+        mouth = (0.06 + 0.32 * abs(math.sin(t * 9))) * math.pi
+        pygame.draw.circle(screen, (255, 240, 0), (int(cx), int(cy)), r)
+        p1 = (cx + r * math.cos(mouth), cy + r * math.sin(mouth))
+        p2 = (cx + r * math.cos(-mouth), cy + r * math.sin(-mouth))
+        pygame.draw.polygon(screen, (0, 0, 0), [(cx, cy), p1, p2])
+        # the clock
+        now = datetime.now()
+        ts = self.big.render(now.strftime("%H:%M"), True, (255, 240, 0))
+        screen.blit(ts, (W // 2 - ts.get_width() // 2, 120))
+        ds = self.sm.render(now.strftime("%A  %d %B"), True, (120, 200, 255))
+        screen.blit(ds, (W // 2 - ds.get_width() // 2, 268))
+
+
+SCENES = [FlowField, MatrixRain, Aquarium, WordClock, FlipClock, WorldISS, PacClock]
 
 
 def main():
